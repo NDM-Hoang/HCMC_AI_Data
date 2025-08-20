@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HCMC AI Data Validator - Core validation functions
+HCMC AI Data Validator - Các hàm kiểm tra cốt lõi
 """
 
 import os
@@ -26,10 +26,10 @@ class DataValidator:
         }
     
     def scan_directory(self, dir_name, file_pattern="*"):
-        """Scan a directory for files matching pattern"""
+        """Quét thư mục để tìm các file khớp với mẫu"""
         dir_path = self.data_path / dir_name
         if not dir_path.exists():
-            self.results['structure_issues'].append(f"Directory not found: {dir_path}")
+            self.results['structure_issues'].append(f"Không tìm thấy thư mục: {dir_path}")
             return []
         
         files = []
@@ -47,12 +47,12 @@ class DataValidator:
                     if file_path.is_file():
                         files.append(file_path)
         except Exception as e:
-            self.results['structure_issues'].append(f"Error scanning {dir_name}: {e}")
+            self.results['structure_issues'].append(f"Lỗi khi quét {dir_name}: {e}")
         
         return files
     
     def get_video_names_from_files(self, files):
-        """Extract video names from file paths"""
+        """Trích xuất tên video từ đường dẫn file"""
         video_names = set()
         for file_path in files:
             if file_path.name.startswith('L') and '_V' in file_path.name:
@@ -61,7 +61,7 @@ class DataValidator:
         return sorted(list(video_names))
     
     def check_file_sizes(self, files):
-        """Check for empty or suspiciously small files"""
+        """Kiểm tra file rỗng hoặc có kích thước đáng ngờ"""
         empty_files = []
         small_files = []
         
@@ -76,12 +76,12 @@ class DataValidator:
                         'size': size
                     })
             except Exception as e:
-                self.results['structure_issues'].append(f"Error checking size of {file_path}: {e}")
+                self.results['structure_issues'].append(f"Lỗi khi kiểm tra kích thước của {file_path}: {e}")
         
         return empty_files, small_files
     
     def check_duplicate_patterns(self, files):
-        """Check for files with duplicate naming patterns"""
+        """Kiểm tra file có mẫu đặt tên trùng lặp"""
         duplicate_patterns = [
             r'\([0-9]+\)',  # (1), (2), etc.
             r'_copy',       # _copy
@@ -96,7 +96,7 @@ class DataValidator:
         for file_path in files:
             filename = file_path.name
             
-            # Skip normal video naming patterns (L21_V001, etc.)
+            # Bỏ qua mẫu đặt tên video bình thường (L21_V001, etc.)
             if re.match(r'L\d+_V\d+', filename):
                 continue
                 
@@ -111,7 +111,7 @@ class DataValidator:
         return duplicate_files
     
     def analyze_level_distribution(self, video_names):
-        """Analyze video distribution across levels"""
+        """Phân tích phân bố video theo các cấp độ"""
         level_counts = defaultdict(int)
         level_videos = defaultdict(list)
         
@@ -123,7 +123,7 @@ class DataValidator:
                 level_counts[level] += 1
                 level_videos[level].append(video_num)
         
-        # Check for gaps
+        # Kiểm tra khoảng trống
         gaps = {}
         for level, videos in level_videos.items():
             if videos:
@@ -137,12 +137,12 @@ class DataValidator:
         return dict(level_counts), gaps
     
     def validate_all(self):
-        """Run all validation checks"""
-        print("🔍 Starting HCMC AI Data validation...")
-        print(f"📁 Data path: {self.data_path}")
+        """Chạy tất cả các kiểm tra xác thực"""
+        print("🔍 Bắt đầu kiểm tra dữ liệu AI HCMC...")
+        print(f"📁 Đường dẫn dữ liệu: {self.data_path}")
         print()
         
-        # Define directories to check
+        # Định nghĩa các thư mục cần kiểm tra
         directories = {
             'videos': ('video', '*.mp4'),
             'keyframes': ('keyframes', '*.jpg'),
@@ -154,39 +154,39 @@ class DataValidator:
         
         all_video_names = set()
         
-        # Scan each directory
+        # Quét từng thư mục
         for dir_type, (dir_name, pattern) in directories.items():
-            print(f"📂 Scanning {dir_name}...")
+            print(f"📂 Đang quét {dir_name}...")
             
             files = self.scan_directory(dir_name, pattern)
             self.results['file_counts'][dir_type] = len(files)
             
-            # Get video names
+            # Lấy tên video
             video_names = self.get_video_names_from_files(files)
             all_video_names.update(video_names)
             
-            # Check file sizes
+            # Kiểm tra kích thước file
             empty_files, small_files = self.check_file_sizes(files)
             self.results['empty_files'][dir_type] = empty_files
             
-            # Check for duplicate patterns
+            # Kiểm tra mẫu trùng lặp
             duplicate_files = self.check_duplicate_patterns(files)
             self.results['duplicate_files'][dir_type] = duplicate_files
         
-        # Analyze level distribution
+        # Phân tích phân bố cấp độ
         level_counts, gaps = self.analyze_level_distribution(list(all_video_names))
         self.results['level_distribution'] = {
             'counts': level_counts,
             'gaps': gaps
         }
         
-        # Generate summary
+        # Tạo bản tóm tắt
         self.generate_summary()
         
         return self.results
     
     def generate_summary(self):
-        """Generate summary statistics"""
+        """Tạo thống kê tóm tắt"""
         total_files = sum(self.results['file_counts'].values())
         total_empty_files = sum(len(files) for files in self.results['empty_files'].values())
         total_duplicate_patterns = sum(len(files) for files in self.results['duplicate_files'].values())

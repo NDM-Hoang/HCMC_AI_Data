@@ -6,20 +6,25 @@ The project has been reorganized into a clean, modular structure:
 
 ```
 HCMC_AI_Data/
-├── main.py                    # 🚀 Main entry point
+├── main.py                    # 🚀 Basic validation entry point
+├── comprehensive_check.py     # 🔍 Comprehensive validation entry point (RECOMMENDED)
 ├── src/                       # 📦 Source code package
 │   ├── __init__.py           # Package initialization
 │   ├── validators/           # 🔍 Validation modules
 │   │   ├── __init__.py       # Validators package
-│   │   ├── data_validator.py      # Core validation functions
+│   │   ├── data_validator.py           # Basic validation functions
+│   │   ├── comprehensive_validator.py  # Cross-directory validation (NEW)
 │   │   ├── duplicate_file_checker.py
 │   │   ├── data_validation.py
 │   │   └── detailed_analysis.py
 │   └── utils/                # 🛠️ Utility modules
 │       ├── __init__.py       # Utils package
-│       └── check.py          # Reporting and utility functions
+│       ├── check.py                    # Basic reporting functions
+│       └── comprehensive_report.py     # Enhanced reporting (NEW)
 ├── reports/                  # 📊 Generated reports and results
 │   ├── validation_results.json
+│   ├── comprehensive_validation_results.json
+│   ├── missing_files_report.md
 │   ├── detailed_analysis_results.json
 │   ├── data_validation_results.json
 │   ├── duplicate_check_report.md
@@ -62,14 +67,17 @@ python main.py "/path/to/Data2025"
 ## 📦 Package Structure
 
 ### Validators Package (`src/validators/`)
-- **DataValidator**: Core validation functions
+- **DataValidator**: Basic validation functions
+- **ComprehensiveValidator**: Cross-directory validation (NEW)
 - **DuplicateFileChecker**: Duplicate file detection
 - **HCMCDataValidator**: Comprehensive data validation
 - **DetailedDataAnalyzer**: Detailed analysis functions
 
 ### Utils Package (`src/utils/`)
-- **check.py**: Reporting and utility functions
+- **check.py**: Basic reporting functions
+- **comprehensive_report.py**: Enhanced reporting for cross-directory validation (NEW)
 - **print_report()**: Generate formatted reports
+- **print_comprehensive_report()**: Generate comprehensive reports
 - **save_results()**: Save results to files
 - **get_default_path()**: Cross-platform path detection
 

@@ -1,5 +1,5 @@
 {
-  "validation_time": "2025-08-20T11:10:15.433680",
+  "validation_time": "2025-08-20T11:55:21.116047",
   "data_path": "/run/media/rin/New Volume/HCMC_AI_Data/Data2025",
   "file_counts": {
     "videos": 873,
@@ -30,15 +30,15 @@
   "level_distribution": {
     "counts": {
       "26": 498,
-      "25": 88,
+      "22": 31,
       "30": 96,
       "23": 25,
+      "25": 88,
       "24": 43,
-      "27": 16,
-      "22": 31,
+      "29": 23,
       "28": 24,
       "21": 29,
-      "29": 23
+      "27": 16
     },
     "gaps": {
       "26": [

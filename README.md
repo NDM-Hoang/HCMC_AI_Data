@@ -1,169 +1,188 @@
-# HCMC AI Data 2025 - Data Validation System
+# HCMC AI Data 2025 - Hệ Thống Kiểm Tra Dữ Liệu
 
-A comprehensive, cross-platform data validation system for the HCMC AI Data 2025 dataset.
+Một hệ thống kiểm tra dữ liệu toàn diện, đa nền tảng cho bộ dữ liệu HCMC AI Data 2025.
 
-## 🚀 Quick Start
+## 🚀 Khởi Động Nhanh
 
-### For Windows Users:
+### Kiểm Tra Cơ Bản (Gốc):
 ```bash
-python main.py "C:\path\to\Data2025"
+python main.py "/path/to/Data2025"
 ```
 
-### For macOS Users:
+### Kiểm Tra Toàn Diện (Khuyến Nghị):
 ```bash
-python main.py "/Volumes/Data/HCMC_AI_Data/Data2025"
+python comprehensive_check.py "/path/to/Data2025"
 ```
 
-### For Linux Users:
+### Ví Dụ Đa Nền Tảng:
+
+#### Windows:
 ```bash
-python main.py "/run/media/rin/New Volume/HCMC_AI_Data/Data2025"
+python comprehensive_check.py "C:\path\to\Data2025"
 ```
 
-### Using Default Path (Auto-detected):
+#### macOS:
 ```bash
-python main.py
+python comprehensive_check.py "/Volumes/Data/HCMC_AI_Data/Data2025"
+```
+
+#### Linux:
+```bash
+python comprehensive_check.py "/run/media/rin/New Volume/HCMC_AI_Data/Data2025"
+```
+
+### Sử Dụng Đường Dẫn Mặc Định (Tự Động Phát Hiện):
+```bash
+python comprehensive_check.py
 ```
 
 ## 📁 File Structure
 
 ```
 HCMC_AI_Data/
-├── main.py                 # Main entry point
+├── main.py                    # Basic validation entry point
+├── comprehensive_check.py     # 🚀 Comprehensive validation entry point (RECOMMENDED)
 ├── src/
 │   ├── __init__.py
 │   ├── validators/
 │   │   ├── __init__.py
-│   │   ├── data_validator.py      # Core validation functions
+│   │   ├── data_validator.py           # Basic validation functions
+│   │   ├── comprehensive_validator.py  # 🔍 Cross-directory validation (NEW)
 │   │   ├── duplicate_file_checker.py
 │   │   ├── data_validation.py
 │   │   └── detailed_analysis.py
 │   └── utils/
 │       ├── __init__.py
-│       └── check.py              # Utility functions
-├── reports/               # Generated reports and results
-├── requirements.txt       # Dependencies
-└── README.md             # This file
+│       ├── check.py                    # Basic reporting functions
+│       └── comprehensive_report.py     # 📊 Enhanced reporting (NEW)
+├── reports/                  # Generated reports and results
+├── requirements.txt          # Dependencies
+└── README.md                # This file
 ```
 
-## 🔍 What the Validation Checks
+## 🔍 Các Kiểm Tra Xác Thực
 
-The system performs comprehensive validation including:
+### Kiểm Tra Cơ Bản (`main.py`):
+Hệ thống kiểm tra gốc thực hiện:
+- **Kiểm Tra Số Lượng File** - Đếm file trong mỗi thư mục
+- **Phát Hiện File Rỗng** - Tìm file 0KB hoặc có kích thước đáng ngờ
+- **Phát Hiện Mẫu Trùng Lặp** - Tìm kiếm các mẫu đặt tên như `(1)`, `_copy`, v.v.
+- **Phân Tích Phân Bố Cấp Độ** - Phân tích phân bố video theo các cấp độ
+- **Tương Thích Đa Nền Tảng** - Hoạt động trên Windows, macOS, và Linux
 
-### 1. **File Count Validation**
-- Counts all files in each directory
-- Verifies expected file counts
-- Checks for missing files
+### Kiểm Tra Toàn Diện (`comprehensive_check.py`) - **KHUYẾN NGHỊ**:
+Hệ thống kiểm tra nâng cao bổ sung **kiểm tra tính nhất quán đa thư mục**:
 
-### 2. **Empty File Detection**
-- Finds files with 0KB size
-- Identifies suspiciously small files (<1KB)
-- Reports corrupted or incomplete files
+#### 1. **Tính Nhất Quán Đa Thư Mục**
+- ✅ **Xác thực mối quan hệ** giữa video và các file tương ứng
+- ✅ **Kiểm tra tất cả 6 thư mục**: video, keyframes, map-keyframes, media-info, objects, clip-features-32
+- ✅ **Xác định file thiếu** - nếu video tồn tại nhưng thiếu file tương ứng trong các thư mục khác
+- ✅ **Phát hiện file mồ côi** - file không tương ứng với video nào
 
-### 3. **Duplicate File Detection**
-- Searches for files with patterns like `(1)`, `(2)`, `_copy`, `_duplicate`
-- Identifies backup files and version duplicates
-- Reports any duplicate naming patterns
+#### 2. **Phát Hiện Trùng Lặp Nâng Cao**
+- ✅ **Trùng lặp đa thư mục** - tìm file trùng lặp trên tất cả các thư mục
+- ✅ **Trùng lặp theo video** - xác định nhiều file cho cùng một video trong cùng thư mục
 
-### 4. **Data Structure Analysis**
-- Analyzes video distribution across levels (L21-L30)
-- Identifies gaps in video numbering
-- Validates directory structure
+#### 3. **Phân Tích File Toàn Diện**
+- ✅ **Xác thực kích thước file** - kiểm tra file rỗng hoặc bị hỏng
+- ✅ **Tính nhất quán đặt tên** - xác thực mẫu đặt tên file
+- ✅ **Xác thực cấu trúc** - đảm bảo cấu trúc thư mục đúng
 
-### 5. **Cross-Platform Compatibility**
-- Works on Windows, macOS, and Linux
-- Auto-detects operating system
-- Uses appropriate default paths
+#### 4. **Báo Cáo Chi Tiết**
+- ✅ **Báo cáo file thiếu** - danh sách chi tiết file thiếu theo video
+- ✅ **Vấn đề đa thư mục** - các vấn đề cụ thể giữa các thư mục
+- ✅ **Thống kê toàn diện** - tổng file, video, file thiếu, v.v.
 
-## 📊 Expected Data Structure
+## 📊 Cấu Trúc Dữ Liệu Mong Đợi
 
-The validation expects this directory structure:
+Hệ thống kiểm tra mong đợi cấu trúc thư mục này:
 
 ```
 Data2025/
-├── video/                    # 873 .mp4 files
-├── keyframes/               # 873 directories with .jpg files
-├── clip-features-32/        # 873 .npy files
-├── map-keyframes/           # 873 .csv files
-├── media-info/              # 873 .json files
-└── objects/                 # 873 directories with .json files
+├── video/                    # 873 file .mp4
+├── keyframes/               # 873 thư mục với file .jpg
+├── clip-features-32/        # 873 file .npy
+├── map-keyframes/           # 873 file .csv
+├── media-info/              # 873 file .json
+└── objects/                 # 873 thư mục với file .json
 ```
 
-## 🎯 Expected Results
+## 🎯 Kết Quả Mong Đợi
 
-### Perfect Dataset Should Show:
-- **Total files**: ~178,194 files
-- **Videos**: 873 .mp4 files
-- **Keyframes**: 177,321 .jpg files
-- **Features**: 873 .npy files
-- **Maps**: 873 .csv files
-- **Media Info**: 873 .json files
-- **Objects**: 177,321 .json files
-- **Empty files**: 0
-- **Duplicate patterns**: 0
-- **Overall status**: PASS
+### Bộ Dữ Liệu Hoàn Hảo Sẽ Hiển Thị:
+- **Tổng số file**: ~178,194 file
+- **Videos**: 873 file .mp4
+- **Keyframes**: 177,321 file .jpg
+- **Features**: 873 file .npy
+- **Maps**: 873 file .csv
+- **Media Info**: 873 file .json
+- **Objects**: 177,321 file .json
+- **File rỗng**: 0
+- **Mẫu trùng lặp**: 0
+- **Trạng thái tổng thể**: PASS
 
-## 📋 Output Files
+## 📋 File Đầu Ra
 
-### Console Output
-The script provides real-time progress updates and a comprehensive final report.
+### Đầu Ra Console
+Script cung cấp cập nhật tiến trình thời gian thực và báo cáo cuối cùng toàn diện.
 
-### JSON Results
-Saves detailed results to `validation_results.json` including:
-- File counts by type
-- Empty file lists
-- Duplicate file patterns
-- Level distribution analysis
-- Structure issues
-- Summary statistics
+### Kết Quả JSON
+Lưu kết quả chi tiết vào `validation_results.json` bao gồm:
+- Số lượng file theo loại
+- Danh sách file rỗng
+- Mẫu file trùng lặp
+- Phân tích phân bố cấp độ
+- Vấn đề cấu trúc
+- Thống kê tóm tắt
 
-## 🔧 Troubleshooting
+## 🔧 Xử Lý Sự Cố
 
-### Common Issues:
+### Các Vấn Đề Thường Gặp:
 
-1. **Path not found error**
+1. **Lỗi không tìm thấy đường dẫn**
    ```
-   ❌ Error: Data path does not exist: /path/to/Data2025
+   ❌ Lỗi: Đường dẫn dữ liệu không tồn tại: /path/to/Data2025
    ```
-   **Solution**: Provide the correct path to your Data2025 directory
+   **Giải pháp**: Cung cấp đường dẫn chính xác đến thư mục Data2025
 
-2. **Permission denied**
+2. **Từ chối quyền truy cập**
    ```
-   Error scanning video: Permission denied
+   Lỗi quét video: Từ chối quyền truy cập
    ```
-   **Solution**: Ensure you have read permissions for the data directory
+   **Giải pháp**: Đảm bảo bạn có quyền đọc thư mục dữ liệu
 
-3. **Import error**
+3. **Lỗi import**
    ```
    ModuleNotFoundError: No module named 'data_validator'
    ```
-   **Solution**: Ensure `data_validator.py` is in the same directory as `check.py`
+   **Giải pháp**: Đảm bảo `data_validator.py` nằm trong cùng thư mục với `check.py`
 
-## 🎉 Success Indicators
+## 🎉 Chỉ Báo Thành Công
 
-When validation passes successfully, you'll see:
-
-```
-🎯 FINAL ASSESSMENT:
-   ✅ DATASET IS COMPLETE AND READY FOR USE!
-   🎉 All validation checks passed successfully!
-
-🎉 Validation completed successfully!
-```
-
-## 📈 Sample Output
+Khi kiểm tra thành công, bạn sẽ thấy:
 
 ```
-📊 HCMC AI DATA VALIDATION REPORT
+🎯 ĐÁNH GIÁ CUỐI CÙNG:
+   ✅ BỘ DỮ LIỆU HOÀN CHỈNH VÀ SẴN SÀNG SỬ DỤNG!
+   🎉 Tất cả các kiểm tra xác thực đã thành công!
+
+🎉 Kiểm tra hoàn thành thành công!
+```
+
+## 📈 Ví Dụ Đầu Ra
+
+```
+📊 BÁO CÁO KIỂM TRA DỮ LIỆU AI HCMC
 ====================================================================================================
 
-📈 SUMMARY STATISTICS:
-   Total files: 178,194
-   Empty files: 0
-   Duplicate patterns: 0
-   Structure issues: 0
-   Overall status: PASS
+📈 THỐNG KÊ TÓM TẮT:
+   Tổng số file: 178,194
+   File rỗng: 0
+   Mẫu trùng lặp: 0
+   Vấn đề cấu trúc: 0
+   Trạng thái tổng thể: PASS
 
-📁 FILE COUNTS BY TYPE:
+📁 SỐ LƯỢNG FILE THEO LOẠI:
    Videos: 873
    Keyframes: 177,321
    Features: 873
@@ -171,58 +190,58 @@ When validation passes successfully, you'll see:
    Media Info: 873
    Objects: 177,321
 
-📊 LEVEL DISTRIBUTION:
-   L21: 29 videos
-   L22: 31 videos
-   L23: 25 videos
-   L24: 43 videos
-   L25: 88 videos
-   L26: 498 videos
-   L27: 16 videos
-   L28: 24 videos
-   L29: 23 videos
-   L30: 96 videos
+📊 PHÂN BỐ CẤP ĐỘ:
+   L21: 29 video
+   L22: 31 video
+   L23: 25 video
+   L24: 43 video
+   L25: 88 video
+   L26: 498 video
+   L27: 16 video
+   L28: 24 video
+   L29: 23 video
+   L30: 96 video
 
-🔍 EMPTY FILES CHECK:
-   ✅ videos: No empty files
-   ✅ keyframes: No empty files
-   ✅ features: No empty files
-   ✅ maps: No empty files
-   ✅ media_info: No empty files
-   ✅ objects: No empty files
-   🎉 EXCELLENT: No empty files found!
+🔍 KIỂM TRA FILE RỖNG:
+   ✅ videos: Không có file rỗng
+   ✅ keyframes: Không có file rỗng
+   ✅ features: Không có file rỗng
+   ✅ maps: Không có file rỗng
+   ✅ media_info: Không có file rỗng
+   ✅ objects: Không có file rỗng
+   🎉 TUYỆT VỜI: Không tìm thấy file rỗng!
 
-🔍 DUPLICATE FILES CHECK:
-   ✅ videos: No duplicates
-   ✅ keyframes: No duplicates
-   ✅ features: No duplicates
-   ✅ maps: No duplicates
-   ✅ media_info: No duplicates
-   ✅ objects: No duplicates
-   🎉 EXCELLENT: No duplicate files found!
+🔍 KIỂM TRA FILE TRÙNG LẶP:
+   ✅ videos: Không có trùng lặp
+   ✅ keyframes: Không có trùng lặp
+   ✅ features: Không có trùng lặp
+   ✅ maps: Không có trùng lặp
+   ✅ media_info: Không có trùng lặp
+   ✅ objects: Không có trùng lặp
+   🎉 TUYỆT VỜI: Không tìm thấy file trùng lặp!
 
-🎯 FINAL ASSESSMENT:
-   ✅ DATASET IS COMPLETE AND READY FOR USE!
-   🎉 All validation checks passed successfully!
+🎯 ĐÁNH GIÁ CUỐI CÙNG:
+   ✅ BỘ DỮ LIỆU HOÀN CHỈNH VÀ SẴN SÀNG SỬ DỤNG!
+   🎉 Tất cả các kiểm tra xác thực đã thành công!
 ```
 
-## 🤝 Contributing
+## 🤝 Đóng Góp
 
-To add new validation checks:
+Để thêm các kiểm tra xác thực mới:
 
-1. Add new methods to the `DataValidator` class in `data_validator.py`
-2. Call the new methods in the `validate_all()` function
-3. Update the report functions in `check.py` to display the new results
+1. Thêm phương thức mới vào lớp `DataValidator` trong `data_validator.py`
+2. Gọi các phương thức mới trong hàm `validate_all()`
+3. Cập nhật các hàm báo cáo trong `check.py` để hiển thị kết quả mới
 
-## 📞 Support
+## 📞 Hỗ Trợ
 
-If you encounter any issues:
+Nếu bạn gặp bất kỳ vấn đề nào:
 
-1. Check that all files are in the same directory
-2. Verify the data path is correct
-3. Ensure you have read permissions for the data directory
-4. Check the console output for specific error messages
+1. Kiểm tra rằng tất cả file đều nằm trong cùng thư mục
+2. Xác minh đường dẫn dữ liệu là chính xác
+3. Đảm bảo bạn có quyền đọc thư mục dữ liệu
+4. Kiểm tra đầu ra console để biết thông báo lỗi cụ thể
 
 ---
 
-**Happy validating! 🚀**
+**Chúc bạn kiểm tra thành công! 🚀**
