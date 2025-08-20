@@ -1,39 +1,42 @@
 # HCMC AI Data - Project Structure
 
-## 📁 New Organized Structure
-
-The project has been reorganized into a clean, modular structure:
+## 📁 New Organized Structure / Cấu trúc dự án
 
 ```
 HCMC_AI_Data/
 ├── main.py                    # 🚀 Basic validation entry point
 ├── comprehensive_check.py     # 🔍 Comprehensive validation entry point (RECOMMENDED)
+├── check_evaluate.py          # ✅ Unified check + quality evaluation runner (NEW)
 ├── src/                       # 📦 Source code package
-│   ├── __init__.py           # Package initialization
-│   ├── validators/           # 🔍 Validation modules
-│   │   ├── __init__.py       # Validators package
+│   ├── __init__.py
+│   ├── validators/
+│   │   ├── __init__.py
 │   │   ├── data_validator.py           # Basic validation functions
-│   │   ├── comprehensive_validator.py  # Cross-directory validation (NEW)
+│   │   ├── comprehensive_validator.py  # Cross-directory validation
+│   │   ├── data_quality_evaluator.py   # 🖼️ Quality evaluator (media-info, objects ↔ keyframes, maps)
 │   │   ├── duplicate_file_checker.py
 │   │   ├── data_validation.py
 │   │   └── detailed_analysis.py
-│   └── utils/                # 🛠️ Utility modules
-│       ├── __init__.py       # Utils package
-│       ├── check.py                    # Basic reporting functions
-│       └── comprehensive_report.py     # Enhanced reporting (NEW)
+│   └── utils/
+│       ├── __init__.py
+│       ├── check.py                    # Reporting utilities
+│       └── comprehensive_report.py     # Enhanced reporting
 ├── reports/                  # 📊 Generated reports and results
 │   ├── validation_results.json
-│   ├── comprehensive_validation_results.json
-│   ├── missing_files_report.md
-│   ├── detailed_analysis_results.json
-│   ├── data_validation_results.json
-│   ├── duplicate_check_report.md
-│   ├── file_size_check_report.md
-│   └── final_summary_report.md
+│   ├── data_quality_evaluation_results.json
+│   └── data_quality_evaluation/
+│       └── overlays/
+│           ├── random1.jpg .. random5.jpg
 ├── requirements.txt          # 📋 Dependencies
-├── README.md                # 📖 Main documentation
-└── STRUCTURE.md             # 📋 This file
+├── README.md                 # 📖 Main documentation
+└── STRUCTURE.md              # 📋 This file
 ```
+
+## 🚀 Run / Chạy
+
+- Unified (VN/EN): `python check_evaluate.py "/path/to/Data2025"`
+- Basic: `python main.py "/path/to/Data2025"`
+- Comprehensive: `python comprehensive_check.py "/path/to/Data2025"`
 
 ## 🔄 Migration Summary
 
@@ -51,18 +54,6 @@ HCMC_AI_Data/
 - ✅ **Professional structure** - Follows Python best practices
 - ✅ **Clean imports** - Proper package structure
 - ✅ **Scalable** - Easy to add new modules
-
-## 🚀 Usage
-
-### Before (Old Structure):
-```bash
-python check.py "/path/to/Data2025"
-```
-
-### After (New Structure):
-```bash
-python main.py "/path/to/Data2025"
-```
 
 ## 📦 Package Structure
 

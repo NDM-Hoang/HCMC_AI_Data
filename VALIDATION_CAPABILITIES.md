@@ -20,7 +20,7 @@ The original validation system provides fundamental checks:
 - **No missing file detection** - doesn't verify if videos have corresponding files in all directories
 - **Basic duplicate detection** - only checks naming patterns, not actual file relationships
 
-## 🚀 Comprehensive Validation (`comprehensive_check.py`) - **RECOMMENDED**
+## 🚀 Comprehensive Validation (`comprehensive_check.py`) - **RECOMMENDED / KHUYẾN NGHỊ**
 
 The enhanced validation system provides **complete cross-directory consistency checking**:
 
@@ -171,3 +171,20 @@ python comprehensive_check.py "/run/media/rin/New Volume/HCMC_AI_Data/Data2025"
 ```
 
 The comprehensive validation ensures your dataset is **complete, consistent, and ready for production use**! 🎉
+
+---
+
+## 🖼️ Quality Evaluation (VN/EN)
+
+### Unified Runner
+```bash
+python check_evaluate.py "/path/to/Data2025"
+```
+
+### What it does / Tính năng
+- EN: Validates media-info fields; overlays object boxes with labels on keyframes; maps `n/frame_idx` to CSV and overlays `fps` + `pts_time`.
+- VN: Kiểm tra `media-info` bắt buộc; vẽ bbox + nhãn đối tượng lên keyframe; đối sánh `n/frame_idx` với CSV và ghi `fps` + `pts_time`.
+
+### Output
+- Saves 5 random annotated images: `reports/data_quality_evaluation/overlays/random1..random5.jpg`.
+- JSON summary: `reports/data_quality_evaluation_results.json`.

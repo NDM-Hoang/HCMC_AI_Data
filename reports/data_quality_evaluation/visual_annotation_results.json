@@ -1,0 +1,42 @@
+[
+  {
+    "output_file": "reports/data_quality_evaluation/overlays/random1.jpg",
+    "video_name": "L26_V400",
+    "keyframe": "/run/media/rin/New Volume/HCMC_AI_Data/Data2025/keyframes/L26_V400/002.jpg",
+    "fps": 25.0,
+    "pts_time": 0.84,
+    "num_boxes": 8
+  },
+  {
+    "output_file": "reports/data_quality_evaluation/overlays/random2.jpg",
+    "video_name": "L26_V284",
+    "keyframe": "/run/media/rin/New Volume/HCMC_AI_Data/Data2025/keyframes/L26_V284/002.jpg",
+    "fps": 25.0,
+    "pts_time": 0.84,
+    "num_boxes": 6
+  },
+  {
+    "output_file": "reports/data_quality_evaluation/overlays/random3.jpg",
+    "video_name": "L26_V383",
+    "keyframe": "/run/media/rin/New Volume/HCMC_AI_Data/Data2025/keyframes/L26_V383/001.jpg",
+    "fps": 25.0,
+    "pts_time": 0.0,
+    "num_boxes": 3
+  },
+  {
+    "output_file": "reports/data_quality_evaluation/overlays/random4.jpg",
+    "video_name": "L30_V057",
+    "keyframe": "/run/media/rin/New Volume/HCMC_AI_Data/Data2025/keyframes/L30_V057/002.jpg",
+    "fps": 25.0,
+    "pts_time": 3.0,
+    "num_boxes": 0
+  },
+  {
+    "output_file": "reports/data_quality_evaluation/overlays/random5.jpg",
+    "video_name": "L30_V061",
+    "keyframe": "/run/media/rin/New Volume/HCMC_AI_Data/Data2025/keyframes/L30_V061/001.jpg",
+    "fps": 25.0,
+    "pts_time": 0.0,
+    "num_boxes": 0
+  }
+]

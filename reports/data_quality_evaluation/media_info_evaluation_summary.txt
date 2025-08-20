@@ -1,0 +1,24 @@
+
+Media Info Validation Summary
+============================
+Total files: 873
+Valid files: 870
+Invalid files: 3
+Validation rate: 99.66%
+
+Field Statistics:
+  title: 873/873 (100.00%)
+  publish_date: 873/873 (100.00%)
+  watch_url: 873/873 (100.00%)
+  length: 873/873 (100.00%)
+  description: 873/873 (100.00%)
+  author: 873/873 (100.00%)
+  thumbnail_url: 873/873 (100.00%)
+
+Invalid files:
+  /run/media/rin/New Volume/HCMC_AI_Data/Data2025/media-info/L27_V009.json
+    Issues: description: empty/null value
+  /run/media/rin/New Volume/HCMC_AI_Data/Data2025/media-info/L27_V010.json
+    Issues: description: empty/null value
+  /run/media/rin/New Volume/HCMC_AI_Data/Data2025/media-info/L27_V014.json
+    Issues: description: empty/null value

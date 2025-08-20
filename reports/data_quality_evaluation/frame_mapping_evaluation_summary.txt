@@ -1,0 +1,13 @@
+
+Frame Mapping Validation Summary
+===============================
+Total files: 873
+Valid files: 873
+Invalid files: 0
+File validation rate: 100.00%
+
+Total rows: 177321
+Valid rows: 177321
+Row validation rate: 100.00%
+
+Required columns: n, pts_time, fps, frame_idx

@@ -1,0 +1,35 @@
+
+Comprehensive Data Quality Evaluation Summary
+============================================
+Evaluation Date: 2025-08-20T13:31:43.064758
+Duration: 0:00:12.541086
+Videos Evaluated: 873
+
+1. MEDIA INFO EVALUATION
+------------------------
+Total files: 873
+Valid files: 870
+Validation rate: 99.66%
+
+2. OBJECT LOCATION EVALUATION
+-----------------------------
+
+3. FRAME MAPPING EVALUATION
+---------------------------
+Total files: 873
+Valid files: 873
+File validation rate: 100.00%
+Row validation rate: 100.00%
+
+4. VISUAL ANNOTATIONS
+---------------------
+
+5. OUTPUT FILES
+---------------
+Results directory: reports/data_quality_evaluation
+- media_info_evaluation.json: Media info validation results
+- object_location_evaluation.json: Object location validation results
+- frame_mapping_evaluation.json: Frame mapping validation results
+- visual_annotation_results.json: Visual annotation results
+- comprehensive_quality_evaluation.json: Complete evaluation results
+- annotated_keyframes/: Directory containing annotated images

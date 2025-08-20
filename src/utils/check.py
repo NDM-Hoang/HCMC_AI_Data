@@ -15,6 +15,7 @@ import sys
 import json
 from pathlib import Path
 from ..validators.data_validator import DataValidator
+from ..validators.data_quality_evaluator import DataQualityEvaluator
 
 def get_default_path():
     """Lấy đường dẫn dữ liệu mặc định dựa trên hệ điều hành"""
@@ -134,6 +135,25 @@ def main():
     
     # Lưu kết quả
     save_results(results)
+
+    # Giai đoạn 2: Đánh giá chất lượng (media-info, overlay objects lên keyframes)
+    print("\n🔎 Đang đánh giá chất lượng dữ liệu (media-info, keyframes, objects, maps)...")
+    try:
+        evaluator = DataQualityEvaluator(data_path)
+        # Hiển thị ngẫu nhiên 5 ảnh đã có annotation trên toàn bộ dataset, không lưu ảnh để tiết kiệm dung lượng
+        eval_results = evaluator.evaluate(
+            max_frames_per_video=3,
+            score_threshold=0.3,
+            display_only=False,
+            save_overlays=True,
+            cleanup_outputs=True,
+            save_per_video_previews=False,
+            save_annotated_per_video=False,
+            num_random_saves=5
+        )
+        print("✅ Hoàn thành đánh giá chất lượng. Đã lưu 5 ảnh ngẫu nhiên (random1..random5.jpg) trong reports/data_quality_evaluation/overlays/.")
+    except Exception as e:
+        print(f"⚠️  Lỗi khi đánh giá chất lượng dữ liệu: {e}")
     
     # Thoát với mã phù hợp
     if results['summary']['overall_status'] == 'PASS':
