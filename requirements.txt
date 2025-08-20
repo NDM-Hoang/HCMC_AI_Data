@@ -1,0 +1,13 @@
+# HCMC AI Data Validation Tool
+# Core dependencies for data validation and analysis
+
+# Standard library modules used:
+# - pathlib (Python 3.4+)
+# - json
+# - re
+# - collections
+# - datetime
+# - os
+# - sys
+
+# No external dependencies required - uses only Python standard library
