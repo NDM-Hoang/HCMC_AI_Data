@@ -1,6 +1,6 @@
 {
-  "validation_time": "2025-08-20T14:46:41.608993",
-  "data_path": "/run/media/rin/New Volume/HCMC_AI_Data/Data2025",
+  "validation_time": "2025-08-21T11:23:50.616601",
+  "data_path": "/mnt/win/HCMC_AI_Data/Data2025",
   "file_counts": {
     "videos": 873,
     "keyframes": 177321,
@@ -29,16 +29,16 @@
   "structure_issues": [],
   "level_distribution": {
     "counts": {
-      "30": 96,
       "26": 498,
+      "27": 16,
       "25": 88,
+      "30": 96,
       "24": 43,
-      "23": 25,
-      "22": 31,
-      "28": 24,
       "21": 29,
+      "28": 24,
+      "23": 25,
       "29": 23,
-      "27": 16
+      "22": 31
     },
     "gaps": {
       "26": [

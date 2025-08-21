@@ -1,13 +1,24 @@
+Frame/Time Calculation & Video Identifier Mapping (VN/EN)
+---------------------------------------------------------
 
-Frame Mapping Validation Summary
-===============================
-Total files: 873
-Valid files: 873
-Invalid files: 0
-File validation rate: 100.00%
+VN:
+- Frame (frame) hiển thị lấy từ 'frame_idx' trong CSV nếu có; nếu thiếu, mới lấy từ tên file keyframe (ví dụ 001.jpg → 1).
+- Đối sánh với CSV 'map-keyframes': ưu tiên cột n (1-based); thử 0-based (n-1); nếu vẫn không, thử 'frame_idx'.
+- Time (time) lấy trực tiếp từ 'pts_time' nếu có; nếu không, tính time = frame_idx / fps khi cả hai trường có.
+- Ngưỡng lọc đối tượng (score_threshold): 0.3.
+- Cách lấy L và V: dùng tên video dạng Lxx_Vyyy (ví dụ L21_V001), hiển thị là "L21 V001".
+- Màu bbox cố định theo nhãn để dễ phân biệt.
 
-Total rows: 177321
-Valid rows: 177321
-Row validation rate: 100.00%
+EN:
+- Displayed frame number comes from 'frame_idx' in CSV when available; otherwise from keyframe filename (e.g., 001.jpg → 1).
+- Mapping to 'map-keyframes' CSV: prefer column n (1-based); try zero-based fallback (n-1); else try frame_idx.
+- Time is taken from 'pts_time' when present; otherwise computed as frame_idx / fps when both are available.
+- Detection score threshold: 0.3.
+- L/V identifier: extracted from video name Lxx_Vyyy (e.g., L21_V001) and shown as "L21 V001".
+- Bounding-box color is stable per class label.
 
-Required columns: n, pts_time, fps, frame_idx
+Aggregate matching counts:
+- by_n: 2619
+- by_frame_idx: 0
+- unmatched: 0
+- processed_frames: 2619

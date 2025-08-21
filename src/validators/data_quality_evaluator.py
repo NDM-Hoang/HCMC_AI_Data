@@ -248,8 +248,9 @@ class DataQualityEvaluator:
         return bboxes, labels
 
     def _render_overlay_image(self, image_path: Path, bboxes: List[Tuple[int, int, int, int]],
-                              fps: Optional[float], pts_time: Optional[float],
-                              write_note_if_empty: bool = True, labels: Optional[List[str]] = None):
+                              frame_number: Optional[int], time_sec: Optional[float],
+                              write_note_if_empty: bool = True, labels: Optional[List[str]] = None,
+                              video_name: Optional[str] = None):
         if not PIL_AVAILABLE:
             return None
         try:
@@ -286,10 +287,16 @@ class DataQualityEvaluator:
 
             # overlay text
             text_lines = []
-            if fps is not None:
-                text_lines.append(f"fps: {fps:.2f}")
-            if pts_time is not None:
-                text_lines.append(f"pts_time: {pts_time:.3f}")
+            if video_name:
+                try:
+                    vid_disp = video_name.replace('_', ' ')
+                except Exception:
+                    vid_disp = video_name
+                text_lines.append(vid_disp)
+            if frame_number is not None:
+                text_lines.append(f"frame: {frame_number}")
+            if time_sec is not None:
+                text_lines.append(f"time: {time_sec:.3f}s")
             if write_note_if_empty and not text_lines and not bboxes:
                 text_lines.append("no objects/map row")
             if text_lines:
@@ -302,9 +309,10 @@ class DataQualityEvaluator:
             return None
 
     def _draw_overlay(self, image_path: Path, bboxes: List[Tuple[int, int, int, int]],
-                      fps: Optional[float], pts_time: Optional[float], output_path: Path,
-                      write_note_if_empty: bool = True, labels: Optional[List[str]] = None) -> Optional[str]:
-        img = self._render_overlay_image(image_path, bboxes, fps, pts_time, write_note_if_empty, labels)
+                      frame_number: Optional[int], time_sec: Optional[float], output_path: Path,
+                      write_note_if_empty: bool = True, labels: Optional[List[str]] = None,
+                      video_name: Optional[str] = None) -> Optional[str]:
+        img = self._render_overlay_image(image_path, bboxes, frame_number, time_sec, write_note_if_empty, labels, video_name=video_name)
         if img is None:
             return None
         try:
@@ -368,7 +376,7 @@ class DataQualityEvaluator:
             summary['notes'].append('No common videos between keyframes and objects found.')
 
         # 3) Iterate videos and produce overlays / collect display candidates
-        annotated_candidates: List[Tuple[Path, List[Tuple[int,int,int,int]], List[str], Optional[float], Optional[float], str]] = []
+        annotated_candidates: List[Tuple[Path, List[Tuple[int,int,int,int]], List[str], Optional[int], Optional[float], str]] = []
         for video_name in common_video_names:
             video_result = VideoEvaluationResult(video_name=video_name)
 
@@ -454,13 +462,37 @@ class DataQualityEvaluator:
                 else:
                     unmatched_count += 1
 
+                # Determine display frame number and time
+                frame_display = None
+                try:
+                    if map_row and map_row.get('frame_idx') is not None:
+                        frame_display = int(float(map_row.get('frame_idx')))
+                except Exception:
+                    frame_display = None
+                if frame_display is None:
+                    frame_display = n_from_name
+                time_display = None
+                if pts_time is not None:
+                    try:
+                        time_display = float(pts_time)
+                    except Exception:
+                        time_display = None
+                if time_display is None and map_row:
+                    try:
+                        fidx_val = map_row.get('frame_idx')
+                        fps_val = map_row.get('fps')
+                        if fidx_val is not None and fps_val:
+                            time_display = float(fidx_val) / float(fps_val)
+                    except Exception:
+                        time_display = None
+
                 # Draw overlay (only if saving per video previews)
                 overlay_out = None
                 error = None
                 if PIL_AVAILABLE and save_overlays and save_per_video_previews:
                     self.output_root.mkdir(parents=True, exist_ok=True)
                     ov_dir = self.output_overlays / video_name
-                    overlay_out = self._draw_overlay(kf, bboxes, fps, pts_time, ov_dir / kf.name, labels=labels)
+                    overlay_out = self._draw_overlay(kf, bboxes, frame_display, time_display, ov_dir / kf.name, labels=labels, video_name=video_name)
                 else:
                     if not PIL_AVAILABLE:
                         error = 'Pillow not available to draw overlays. Install Pillow.'
@@ -516,13 +548,37 @@ class DataQualityEvaluator:
                         pts_ann = map_row.get('pts_time')
 
                     if bboxes or (fps_ann is not None) or (pts_ann is not None):
+                        # Compute frame/time for this candidate
+                        frame_disp = None
+                        try:
+                            if map_row and map_row.get('frame_idx') is not None:
+                                frame_disp = int(float(map_row.get('frame_idx')))
+                        except Exception:
+                            frame_disp = None
+                        if frame_disp is None:
+                            frame_disp = n_from_name
+                        time_disp = None
+                        if pts_ann is not None:
+                            try:
+                                time_disp = float(pts_ann)
+                            except Exception:
+                                time_disp = None
+                        if time_disp is None and map_row:
+                            try:
+                                fidx_val = map_row.get('frame_idx')
+                                fps_val = map_row.get('fps')
+                                if fidx_val is not None and fps_val:
+                                    time_disp = float(fidx_val) / float(fps_val)
+                            except Exception:
+                                time_disp = None
+
                         # Save annotated frames only if requested per video
                         if save_overlays and save_annotated_per_video:
                             self.output_root.mkdir(parents=True, exist_ok=True)
                             ann_dir = self.output_annotated / video_name
-                            self._draw_overlay(kf, bboxes, fps_ann, pts_ann, ann_dir / kf.name, write_note_if_empty=False, labels=labels)
+                            self._draw_overlay(kf, bboxes, frame_disp, time_disp, ann_dir / kf.name, write_note_if_empty=False, labels=labels, video_name=video_name)
                         # Always collect for potential display
-                        annotated_candidates.append((kf, bboxes, labels, fps_ann, pts_ann, video_name))
+                        annotated_candidates.append((kf, bboxes, labels, frame_disp, time_disp, video_name))
                         annotated_collected += 1
                         if annotated_collected >= min_annotated_per_video:
                             break
@@ -542,8 +598,8 @@ class DataQualityEvaluator:
         if display_only and PIL_AVAILABLE and annotated_candidates:
             rng = random.Random()
             take = min(num_random_displays, len(annotated_candidates))
-            for kf, bboxes, labels, fps_val, pts_val, video_name in rng.sample(annotated_candidates, take):
-                img = self._render_overlay_image(kf, bboxes, fps_val, pts_val, write_note_if_empty=False, labels=labels)
+            for kf, bboxes, labels, frame_disp, time_disp, video_name in rng.sample(annotated_candidates, take):
+                img = self._render_overlay_image(kf, bboxes, frame_disp, time_disp, write_note_if_empty=False, labels=labels, video_name=video_name)
                 if img is not None:
                     try:
                         img.show(title=f"{video_name}/{kf.name}")
@@ -566,8 +622,8 @@ class DataQualityEvaluator:
             self.output_overlays.mkdir(parents=True, exist_ok=True)
 
             manifest: List[Dict[str, Any]] = []
-            for idx, (kf, bboxes, labels, fps_val, pts_val, video_name) in enumerate(rng.sample(annotated_candidates, take), start=1):
-                img = self._render_overlay_image(kf, bboxes, fps_val, pts_val, write_note_if_empty=False, labels=labels)
+            for idx, (kf, bboxes, labels, frame_disp, time_disp, video_name) in enumerate(rng.sample(annotated_candidates, take), start=1):
+                img = self._render_overlay_image(kf, bboxes, frame_disp, time_disp, write_note_if_empty=False, labels=labels, video_name=video_name)
                 if img is None:
                     continue
                 out_path = self.output_overlays / f"random{idx}.jpg"
@@ -577,8 +633,8 @@ class DataQualityEvaluator:
                         'output_file': str(out_path),
                         'video_name': video_name,
                         'keyframe': str(kf),
-                        'fps': fps_val,
-                        'pts_time': pts_val,
+                        'frame': frame_disp,
+                        'time_sec': time_disp,
                         'num_boxes': len(bboxes)
                     })
                 except Exception:
@@ -594,6 +650,49 @@ class DataQualityEvaluator:
         out_json = self.output_root.parent / 'data_quality_evaluation_results.json'
         with open(out_json, 'w', encoding='utf-8') as f:
             json.dump(summary, f, indent=2, ensure_ascii=False)
+
+        # Write explanation report for frame/time calculation and L/V tracking (VN/EN)
+        try:
+            # compute aggregate matching counts from summary
+            total_by_n = 0
+            total_by_fidx = 0
+            total_unmatched = 0
+            total_processed_frames = 0
+            for vid in summary.get('videos', {}).values():
+                m = vid.get('matches', {})
+                total_by_n += int(m.get('by_n', 0))
+                total_by_fidx += int(m.get('by_frame_idx', 0))
+                total_unmatched += int(m.get('unmatched', 0))
+                total_processed_frames += int(vid.get('processed_frames', 0))
+
+            self.output_root.mkdir(parents=True, exist_ok=True)
+            explanation_path = self.output_root / 'frame_mapping_evaluation_summary.txt'
+            with open(explanation_path, 'w', encoding='utf-8') as ef:
+                ef.write(
+                    'Frame/Time Calculation & Video Identifier Mapping (VN/EN)\n'
+                    '---------------------------------------------------------\n\n'
+                    'VN:\n'
+                    "- Frame (frame) hiển thị lấy từ 'frame_idx' trong CSV nếu có; nếu thiếu, mới lấy từ tên file keyframe (ví dụ 001.jpg → 1).\n"
+                    "- Đối sánh với CSV 'map-keyframes': ưu tiên cột n (1-based); thử 0-based (n-1); nếu vẫn không, thử 'frame_idx'.\n"
+                    "- Time (time) lấy trực tiếp từ 'pts_time' nếu có; nếu không, tính time = frame_idx / fps khi cả hai trường có.\n"
+                    f"- Ngưỡng lọc đối tượng (score_threshold): {score_threshold}.\n"
+                    '- Cách lấy L và V: dùng tên video dạng Lxx_Vyyy (ví dụ L21_V001), hiển thị là "L21 V001".\n'
+                    '- Màu bbox cố định theo nhãn để dễ phân biệt.\n\n'
+                    'EN:\n'
+                    "- Displayed frame number comes from 'frame_idx' in CSV when available; otherwise from keyframe filename (e.g., 001.jpg → 1).\n"
+                    "- Mapping to 'map-keyframes' CSV: prefer column n (1-based); try zero-based fallback (n-1); else try frame_idx.\n"
+                    "- Time is taken from 'pts_time' when present; otherwise computed as frame_idx / fps when both are available.\n"
+                    f"- Detection score threshold: {score_threshold}.\n"
+                    '- L/V identifier: extracted from video name Lxx_Vyyy (e.g., L21_V001) and shown as "L21 V001".\n'
+                    '- Bounding-box color is stable per class label.\n\n'
+                    'Aggregate matching counts:\n'
+                    f"- by_n: {total_by_n}\n"
+                    f"- by_frame_idx: {total_by_fidx}\n"
+                    f"- unmatched: {total_unmatched}\n"
+                    f"- processed_frames: {total_processed_frames}\n"
+                )
+        except Exception:
+            pass
 
         return summary
 
